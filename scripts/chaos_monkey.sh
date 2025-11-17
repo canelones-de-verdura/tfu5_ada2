@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MIN_INTERVAL=${1:-10}
-MAX_INTERVAL=${2:-15}
+MAX_INTERVAL=${2:-30}
 FOLDER_NAME="tfu5_ada2"
 
 echo "El mono loco está suelto"
