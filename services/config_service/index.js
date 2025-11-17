@@ -27,7 +27,7 @@ app.get('/health', (_req, res) => {
 
 app.get('/config/:service', (req, res) => {
     const { service } = req.params;
-    const validServices = ['database', 'redis', 'gateway', 'app', 'jwt'];
+    const validServices = ['database_customers', 'database_products', 'database_orders', 'redis', 'gateway', 'app', 'jwt'];
     if (!validServices.includes(service)) {
         return res.status(400).json({ 
             error: 'Invalid service name',
@@ -53,7 +53,7 @@ app.get('/config', (_req, res) => {
 
 app.get('/config/:service/:key', (req, res) => {
     const { service, key } = req.params;
-    const validServices = ['database', 'redis', 'gateway', 'app', 'jwt'];
+    const validServices = ['database_customers', 'database_products', 'database_orders', 'redis', 'gateway', 'app', 'jwt'];
     if (!validServices.includes(service)) {
         return res.status(400).json({ 
             error: 'Invalid service name',
