@@ -51,7 +51,8 @@ app.get('/', (_req, res) => {
     res.status(200).json({ 
         message: 'TFU5 ADA2 API Gateway',
         customerServices: customerServices,
-        productServices: productServices
+        productServices: productServices,
+        orderServices: orderServices
     });
 });
 
@@ -91,7 +92,8 @@ app.get('/health', async (req, res) => {
             timestamp: new Date().toISOString(),
             services: {
                 customers: customerHealth.data,
-                products: productHealth.data
+                products: productHealth.data,
+                orders: orderHealth.data
             }
         });
     } catch (error) {
@@ -122,6 +124,7 @@ const startServer = async () => {
             console.log(`Gateway is running on port ${port}`);
             console.log(`Customer services: ${customerServices.join(', ')}`);
             console.log(`Product services: ${productServices.join(', ')}`);
+            console.log(`Order services: ${orderServices.join(', ')}`);
         });
     } catch (error) {
         console.error('Failed to start gateway:', error);

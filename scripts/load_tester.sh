@@ -38,6 +38,18 @@ while true; do
     else
         echo "Status: ${product_code:-ERROR}"
     fi
+
+    echo "GET a /api/orders atrás del gateway"
+    order_response=$(curl -s -w "\nHTTP_CODE:%{http_code}" "${GATEWAY_URL}/api/orders" 2>/dev/null)
+    order_code=$(echo "$order_response" | grep "HTTP_CODE:" | cut -d: -f2)
+    order_body=$(echo "$order_response" | sed '/HTTP_CODE:/d')
+    
+    if [ "$order_code" = "200" ]; then
+        order_count=$(echo "$order_body" | grep -o '"id"' | wc -l | xargs)
+        echo "Status: $order_code - Orders: $order_count"
+    else
+        echo "Status: ${order_code:-ERROR}"
+    fi
     
     sleep "$INTERVAL"
 done
