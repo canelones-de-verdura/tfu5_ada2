@@ -2,7 +2,9 @@ import { ProductModel, CategoryModel } from "./model.js";
 import { DatabaseConnection } from "shared-db";
 
 export class ProductDAO {
-    dbConnection = DatabaseConnection.getInstance();
+    get dbConnection() {
+        return DatabaseConnection.getInstance();
+    }
 
     async create(product) {
         try {
@@ -113,7 +115,9 @@ export class ProductDAO {
 }
 
 export class CategoryDAO {
-    dbConnection = DatabaseConnection.getInstance();
+    get dbConnection() {
+        return DatabaseConnection.getInstance();
+    }
 
     async create(category) {
         try {

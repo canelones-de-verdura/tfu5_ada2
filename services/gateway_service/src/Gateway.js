@@ -8,9 +8,9 @@ export class Gateway {
         this.backendServices = backendServices;
         this.circuitBreakers = new Map();
         this.retry = new Retry({
-            maxAttempts: 3,
-            initialDelay: 1000,
-            maxDelay: 5000,
+            maxAttempts: 2,
+            initialDelay: 500,
+            maxDelay: 1000,
             backoffMultiplier: 2
         });
         this.healthMonitor = new HealthMonitor(backendServices);
@@ -69,7 +69,7 @@ export class Gateway {
                                         ...req.headers,
                                         host: new URL(serviceUrl).host
                                     },
-                                    timeout: 5000,
+                                    timeout: 2000,
                                     validateStatus: () => true
                                 });
 

@@ -1,7 +1,6 @@
 {
   "name": "gateway_service",
   "version": "1.0.0",
-  "description": "API Gateway with Circuit Breaker, Retry and Health Monitoring",
   "type": "module",
   "main": "index.js",
   "scripts": {

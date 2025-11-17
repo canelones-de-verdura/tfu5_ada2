@@ -1,7 +1,6 @@
 {
   "name": "config-service",
   "version": "1.0.0",
-  "description": "External Configuration Store Service",
   "type": "module",
   "main": "index.js",
   "scripts": {

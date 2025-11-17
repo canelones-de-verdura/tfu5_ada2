@@ -1,5 +1,5 @@
-import { ProductRepository } from '../../persistence/repository.js';
-import { ProductModel } from '../../persistence/model.js';
+import { ProductRepository } from '../persistence/repository.js';
+import { ProductModel } from '../persistence/model.js';
 
 export class ProductService {
     constructor() {
