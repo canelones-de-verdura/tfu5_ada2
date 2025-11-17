@@ -148,7 +148,7 @@ export class CategoryDAO {
     async findAll() {
         try {
             const rows = await this.dbConnection.query(`SELECT * FROM categories ORDER BY name`);
-            return rows.map((row) => CategoryModel.fromJSON(row));
+            return rows.map((row) => new CategoryModel(row));
         } catch (error) {
             throw new Error(`Error finding all categories: ${error}`);
         }
@@ -187,7 +187,7 @@ export class CategoryDAO {
                 `SELECT * FROM categories WHERE name = ?`,
                 [name]
             );
-            return rows && rows.length > 0 ? CategoryModel.fromJSON(rows[0]) : null;
+            return rows && rows.length > 0 ? new CategoryModel(rows[0]) : null;
         } catch (error) {
             throw new Error(`Error finding category by name: ${error}`);
         }
