@@ -7,10 +7,13 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "express": "^5.1.0",
+    "shared-config-client": "file:../shared/config_client",
     "shared-db": "file:../shared/db",
     "shared-redis": "file:../shared/redis"
   }
