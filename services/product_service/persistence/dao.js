@@ -139,7 +139,7 @@ export class CategoryDAO {
                 [id]
             );
 
-            return rows && rows.length > 0 ? CategoryModel.fromJSON(rows[0]) : null;
+            return rows && rows.length > 0 ? new CategoryModel(rows[0]) : null;
         } catch (error) {
             throw new Error(`Error finding category by ID: ${error}`);
         }
