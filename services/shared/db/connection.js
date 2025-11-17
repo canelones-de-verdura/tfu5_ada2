@@ -5,15 +5,15 @@ export class DatabaseConnection {
 
     constructor(db_config) {
         this.config = {
-            host: db_config.DB_HOST,
-            user: db_config.DB_USER,
-            password: db_config.DB_PASSWORD,
-            database: db_config.DB_NAME,
-            port: parseInt(db_config.DB_PORT, 10),
-            connectionLimit: parseInt(db_config.DB_CONNECTION_LIMIT ?? '10', 10),
+            host: db_config.host,
+            user: db_config.user,
+            password: db_config.password,
+            database: db_config.name,
+            port: parseInt(db_config.port, 10),
+            connectionLimit: parseInt(db_config.connectionLimit ?? '10', 10),
             waitForConnections: true,
             queueLimit: 0,
-            connectTimeout: parseInt(db_config.DB_CONNECT_TIMEOUT ?? '60000', 10)
+            connectTimeout: parseInt(db_config.connectTimeout ?? '60000', 10)
         };
 
         this.pool = mysql.createPool(this.config);

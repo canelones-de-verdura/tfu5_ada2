@@ -4,7 +4,7 @@ export class RedisCache {
     static instance;
 
     constructor(redis_config) {
-        const url = redis_config.REDIS_URL || "redis://redis:6379"
+        const url = redis_config.url || "redis://redis:6379"
         this.client = createClient({ url });
         this.client.on("error", (err) => console.error("Redis Client Error", err));
 
