@@ -6,6 +6,7 @@ const app = express();
 let port;
 let customerServices;
 let productServices;
+let orderServices;
 
 async function loadGatewayConfig() {
     const configClient = ConfigClient.getInstance();
@@ -28,12 +29,18 @@ async function loadGatewayConfig() {
         gatewayConfig.backendProductService2,
         gatewayConfig.backendProductService3
     ];
+    orderServices = [
+        gatewayConfig.backendOrderService1,
+        gatewayConfig.backendOrderService2,
+        gatewayConfig.backendOrderService3
+    ];
 }
 
 await loadGatewayConfig();
 
 const customerGateway = new Gateway(customerServices);
 const productGateway = new Gateway(productServices);
+const orderGateway = new Gateway(orderServices);
 let server;
 
 app.disable('x-powered-by');
@@ -68,7 +75,16 @@ app.get('/health', async (req, res) => {
             productGateway.healthCheck(req, mockRes);
         });
 
-        const overallStatus = customerHealth.code === 200 && productHealth.code === 200 ? 200 : 503;
+        const orderHealth = await new Promise((resolve) => {
+            const mockRes = {
+                status: (code) => ({
+                    json: (data) => resolve({ code, data })
+                })
+            };
+            orderGateway.healthCheck(req, mockRes);
+        });
+
+        const overallStatus = customerHealth.code === 200 && productHealth.code === 200 && orderHealth.code === 200 ? 200 : 503;
         
         res.status(overallStatus).json({
             status: overallStatus === 200 ? 'healthy' : 'degraded',
@@ -89,6 +105,7 @@ app.get('/health', async (req, res) => {
 
 app.use('/api/customers', customerGateway.createProxyConFallback('/api/customers', 'customers'));
 app.use('/api/products', productGateway.createProxyConFallback('/api/products', 'products'));
+app.use('/api/orders', orderGateway.createProxyConFallback('/api/orders', 'orders'));
 
 app.use((req, res) => {
     res.status(404).json({ message: `Endpoint ${req.method} ${req.originalUrl} not found` });

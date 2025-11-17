@@ -10,13 +10,6 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (_req, res) => {
-    res.status(200).json({ 
-        message: 'Configuration Service API',
-        version: '1.0.0'
-    });
-});
-
 app.get('/health', (_req, res) => {
     res.status(200).json({ 
         status: 'ok',

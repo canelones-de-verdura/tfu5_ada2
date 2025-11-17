@@ -40,7 +40,10 @@ export class ConfigStore {
                 backendCustomerService3: process.env.BACKEND_CUSTOMER_SERVICE_3,
                 backendProductService1: process.env.BACKEND_PRODUCT_SERVICE_1,
                 backendProductService2: process.env.BACKEND_PRODUCT_SERVICE_2,
-                backendProductService3: process.env.BACKEND_PRODUCT_SERVICE_3
+                backendProductService3: process.env.BACKEND_PRODUCT_SERVICE_3,
+                backendOrderService1: process.env.BACKEND_ORDER_SERVICE_1,
+                backendOrderService2: process.env.BACKEND_ORDER_SERVICE_2,
+                backendOrderService3: process.env.BACKEND_ORDER_SERVICE_3
             },
             app: {
                 port: parseInt(process.env.APP_PORT, 10),
