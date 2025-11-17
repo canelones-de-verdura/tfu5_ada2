@@ -17,9 +17,9 @@ export class ConfigStore {
             },
             gateway: {
                 port: parseInt(process.env.GATEWAY_PORT || '8080', 10),
-                backendService1: process.env.BACKEND_SERVICE_1 || 'http://app1:3000',
-                backendService2: process.env.BACKEND_SERVICE_2 || 'http://app2:3000',
-                backendService3: process.env.BACKEND_SERVICE_3 || 'http://app3:3000'
+                backendService1: process.env.BACKEND_SERVICE_1 || 'http://customer-service-1:3000',
+                backendService2: process.env.BACKEND_SERVICE_2 || 'http://customer-service-2:3000',
+                backendService3: process.env.BACKEND_SERVICE_3 || 'http://customer-service-3:3000'
             },
             app: {
                 port: parseInt(process.env.APP_PORT || '3000', 10),

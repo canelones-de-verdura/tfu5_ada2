@@ -17,6 +17,10 @@ services:
       REDIS_URL: redis://redis:6379
       JWT_SECRET: super-secret-key-change-in-production
       JWT_EXPIRES_IN: 24h
+      GATEWAY_PORT: 8080
+      BACKEND_SERVICE_1: http://customer-service-1:3000
+      BACKEND_SERVICE_2: http://customer-service-2:3000
+      BACKEND_SERVICE_3: http://customer-service-3:3000
     networks:
       - app-network
     restart: unless-stopped
@@ -62,7 +66,121 @@ services:
       retries: 5
       start_period: 30s
 
-  customer-service:
+  gateway-service:
+    build:
+      context: .
+      dockerfile: services/gateway_service/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      NODE_ENV: production
+      CONFIG_SERVICE_URL: http://config-service:4000
+      CONFIG_CACHE_TIMEOUT: 300000
+      BACKEND_SERVICE_1: http://customer-service-1:3000
+      BACKEND_SERVICE_2: http://customer-service-2:3000
+      BACKEND_SERVICE_3: http://customer-service-3:3000
+    depends_on:
+      config-service:
+        condition: service_healthy
+      customer-service-1:
+        condition: service_healthy
+      customer-service-2:
+        condition: service_healthy
+      customer-service-3:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  customer-service-1:
+    build:
+      context: .
+      dockerfile: services/customer_service/Dockerfile
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      CONFIG_SERVICE_URL: http://config-service:4000
+      CONFIG_CACHE_TIMEOUT: 300000
+      INSTANCE_ID: customer-service-1
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      config-service:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  customer-service-2:
+    build:
+      context: .
+      dockerfile: services/customer_service/Dockerfile
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      CONFIG_SERVICE_URL: http://config-service:4000
+      CONFIG_CACHE_TIMEOUT: 300000
+      INSTANCE_ID: customer-service-2
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      config-service:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  customer-service-3:
+    build:
+      context: .
+      dockerfile: services/customer_service/Dockerfile
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      CONFIG_SERVICE_URL: http://config-service:4000
+      CONFIG_CACHE_TIMEOUT: 300000
+      INSTANCE_ID: customer-service-3
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      config-service:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  customer-service-original:
     build:
       context: .
       dockerfile: services/customer_service/Dockerfile
