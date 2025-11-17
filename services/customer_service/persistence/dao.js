@@ -28,7 +28,7 @@ export class CustomerDAO {
                 [id]
             );
 
-            return rows && rows.length > 0 ? CustomerModel.fromJSON(rows[0]) : null;
+            return rows && rows.length > 0 ? new CustomerModel(rows[0]) : null;
         } catch (error) {
             throw new Error(`Error finding customer by ID: ${error}`);
         }
@@ -37,7 +37,7 @@ export class CustomerDAO {
     async findAll() {
         try {
             const rows = await this.dbConnection.query(`SELECT * FROM customers ORDER BY id`);
-            return rows.map((row) => CustomerModel.fromJSON(row));
+            return rows.map((row) => new CustomerModel(row));
         } catch (error) {
             throw new Error(`Error finding all customers: ${error}`);
         }
@@ -75,7 +75,7 @@ export class CustomerDAO {
                 [email]
             );
 
-            return rows && rows.length > 0 ? CustomerModel.fromJSON(rows[0]) : null;
+            return rows && rows.length > 0 ? new CustomerModel(rows[0]) : null;
         } catch (error) {
             throw new Error(`Error finding customer by email: ${error}`);
         }
