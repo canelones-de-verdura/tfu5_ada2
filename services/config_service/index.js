@@ -10,7 +10,6 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check endpoint
 app.get('/', (_req, res) => {
     res.status(200).json({ 
         message: 'Configuration Service API',

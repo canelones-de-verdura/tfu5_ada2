@@ -10,7 +10,14 @@ export class ProductRepository {
     constructor() {
         this.productDAO = new ProductDAO();
         this.categoryDAO = new CategoryDAO();
-        this.dbConnection = DatabaseConnection.getInstance();
+    }
+
+    get dbConnection() {
+        return DatabaseConnection.getInstance();
+    }
+
+    get redis() {
+        return RedisCache.getInstance();
     }
 
     async create(product) {
@@ -33,7 +40,7 @@ export class ProductRepository {
             }
 
             // Return complete product with categories
-            await RedisCache.getInstance().del("products");
+            await this.redis.del("products");
             return await this.getProductWithCategories(createdProduct.id);
         } catch (error) {
             throw new Error(`Error del repositorio creando producto: ${error}`);
@@ -102,7 +109,7 @@ export class ProductRepository {
                 await this.associateCategories(id, product.category);
             }
 
-            await RedisCache.getInstance().del(cachedkey);
+            await this.redis.del(cachedkey);
 
             return await this.getProductWithCategories(id);
         } catch (error) {
@@ -122,7 +129,7 @@ export class ProductRepository {
                 `DELETE FROM product_categories WHERE product_id = ?`,
                 [id]
             );
-            await RedisCache.getInstance().del(cachedkey);
+            await this.redis.del(cachedkey);
             await this.productDAO.delete(id);
         } catch (error) {
             throw new Error(`Error del repositorio eliminando producto: ${error}`);
@@ -215,7 +222,7 @@ export class ProductRepository {
     async getProductWithCategories(productId) {
         // Repository coordinates: get basic product and its categories separately
         const cachedkey = `product:${productId}`
-        const cached = await RedisCache.getInstance().get < ProductModel > (cachedkey);
+        const cached = await this.redis.get < ProductModel > (cachedkey);
         if (cached) {
             console.log("Cache hit for", cachedkey);
             return cached;
@@ -240,7 +247,7 @@ export class ProductRepository {
         const fullProduct = this.mapToModel(product);
         fullProduct.category = categories;
 
-        RedisCache.getInstance().set(cachedkey, fullProduct, 60 * 5);
+        this.redis.set(cachedkey, fullProduct, 60 * 5);
 
         return fullProduct;
     }

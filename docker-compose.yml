@@ -138,6 +138,9 @@ services:
       BACKEND_SERVICE_1: http://customer-service-1:3000
       BACKEND_SERVICE_2: http://customer-service-2:3000
       BACKEND_SERVICE_3: http://customer-service-3:3000
+      BACKEND_PRODUCT_SERVICE_1: http://product-service-1:3001
+      BACKEND_PRODUCT_SERVICE_2: http://product-service-2:3001
+      BACKEND_PRODUCT_SERVICE_3: http://product-service-3:3001
     depends_on:
       config-service:
         condition: service_healthy
@@ -146,6 +149,12 @@ services:
       customer-service-2:
         condition: service_healthy
       customer-service-3:
+        condition: service_healthy
+      product-service-1:
+        condition: service_healthy
+      product-service-2:
+        condition: service_healthy
+      product-service-3:
         condition: service_healthy
     networks:
       - app-network
@@ -238,19 +247,18 @@ services:
       retries: 3
       start_period: 20s
 
-  customer-service-original:
+  product-service-1:
     build:
       context: .
-      dockerfile: services/customer_service/Dockerfile
-    ports:
-      - "3000:3000"
+      dockerfile: services/product_service/Dockerfile
     environment:
-      PORT: 3000
+      PORT: 3001
       NODE_ENV: production
       CONFIG_SERVICE_URL: http://config-service:4000
       CONFIG_CACHE_TIMEOUT: 300000
+      INSTANCE_ID: product-service-1
     depends_on:
-      mysql-customers:
+      mysql-products:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -260,7 +268,61 @@ services:
       - app-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  product-service-2:
+    build:
+      context: .
+      dockerfile: services/product_service/Dockerfile
+    environment:
+      PORT: 3001
+      NODE_ENV: production
+      CONFIG_SERVICE_URL: http://config-service:4000
+      CONFIG_CACHE_TIMEOUT: 300000
+      INSTANCE_ID: product-service-2
+    depends_on:
+      mysql-products:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      config-service:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  product-service-3:
+    build:
+      context: .
+      dockerfile: services/product_service/Dockerfile
+    environment:
+      PORT: 3001
+      NODE_ENV: production
+      CONFIG_SERVICE_URL: http://config-service:4000
+      CONFIG_CACHE_TIMEOUT: 300000
+      INSTANCE_ID: product-service-3
+    depends_on:
+      mysql-products:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      config-service:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
       interval: 10s
       timeout: 5s
       retries: 3
