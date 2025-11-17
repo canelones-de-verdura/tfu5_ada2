@@ -1,10 +1,11 @@
 import { OrderService } from "../logic/service.js";
 import { OrderStatus } from "../persistence/model.js";
 
-const orderService = new OrderService();
+const getOrderService = () => new OrderService();
 
 export const getAllOrders = async (req, res) => {
     try {
+        const orderService = getOrderService();
         const orders = await orderService.getAllOrders();
         return res.status(200).json(orders);
     } catch (error) {
@@ -14,6 +15,7 @@ export const getAllOrders = async (req, res) => {
 
 export const getOrderById = async (req, res) => {
     try {
+        const orderService = getOrderService();
         const id = parseInt(req.params.id);
         const order = await orderService.getOrderById(id);
 
@@ -29,6 +31,7 @@ export const getOrderById = async (req, res) => {
 
 export const createOrder = async (req, res) => {
     try {
+        const orderService = getOrderService();
         // El servicio se encargará de validar stock, calcular totales, etc.
         const newOrder = await orderService.createOrder(req.body);
         return res.status(201).json(newOrder);
@@ -40,6 +43,7 @@ export const createOrder = async (req, res) => {
 
 export const updateOrderStatus = async (req, res) => {
     try {
+        const orderService = getOrderService();
         const id = parseInt(req.params.id);
         const { status } = req.body; // Se espera un body como { "status": "delivered" }
 
@@ -67,6 +71,7 @@ export const updateOrderStatus = async (req, res) => {
 
 export const deleteOrder = async (req, res) => {
     try {
+        const orderService = getOrderService();
         const id = parseInt(req.params.id);
         await orderService.deleteOrder(id); // El servicio se encarga de reponer el stock
         return res.status(204).send();

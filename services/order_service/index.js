@@ -16,7 +16,7 @@ async function startServer() {
     await redis.connect();
 
     const app = express()
-    const port = 3000
+    const port = 3002
 
     app.disable("x-powered-by");
     app.use(express.json());
