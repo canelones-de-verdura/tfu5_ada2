@@ -1,4 +1,4 @@
-import { ProductModel, CategoryModel } from "./model";
+import { ProductModel, CategoryModel } from "./model.js";
 import { DatabaseConnection } from "shared-db";
 
 export class ProductDAO {

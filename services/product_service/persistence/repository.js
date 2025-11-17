@@ -1,10 +1,10 @@
 import { RedisCache } from "shared-redis"
 import { DatabaseConnection } from "shared-db"
 
-import { ProductDAO } from './dao';
-import { ProductModel } from './model';
-import { CategoryDAO } from './dao';
-import { CategoryModel } from './model';
+import { ProductDAO } from './dao.js';
+import { ProductModel } from './model.js';
+import { CategoryDAO } from './dao.js';
+import { CategoryModel } from './model.js';
 
 export class ProductRepository {
     constructor() {
