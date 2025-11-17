@@ -4,7 +4,25 @@ import { OrderRepository } from '../persistence/repository.js';
 export class OrderService {
     constructor() {
         this.orderRepository = new OrderRepository();
-        this.productRepository = new ProductRepository();
+    }
+
+    async findProductById(id) {
+        const response = await fetch(`localhost:8080/api/products/${id}`)
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        return response.body;
+    }
+
+    async updateProduct(id, product) {
+        const response = await fetch(`localhost:8080/api/products/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(product),
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
     }
 
     /**
@@ -45,7 +63,7 @@ export class OrderService {
 
         // 1. Validar stock y calcular precios y total
         for (const item of orderData.items) {
-            const product = await this.productRepository.findById(item.productId);
+            const product = await this.findProductById(item.productId);
             if (!product) {
                 throw new Error(`El producto con ID ${item.productId} no existe.`);
             }
@@ -74,9 +92,10 @@ export class OrderService {
 
         // 4. Actualizar el stock de los productos
         for (const item of createdOrder.items) {
-            const currentProduct = await this.productRepository.findById(item.productId);
+            const currentProduct = await this.findProductById(item.productId);
+            currentProduct.stock = currentProduct.stock - item.quantity;
             if (currentProduct) {
-                await this.productRepository.updateStock(item.productId, currentProduct.stock - item.quantity);
+                await this.updateProduct(item.productId, currentProduct);
             }
         }
 
@@ -102,9 +121,10 @@ export class OrderService {
         if (orderToDelete && orderToDelete.items) {
             // 2. Reponer el stock
             for (const item of orderToDelete.items) {
-                const currentProduct = await this.productRepository.findById(item.productId);
+                const currentProduct = await this.findProductById(item.productId);
+                currentProduct.stock = currentProduct.stock + item.quantity;
                 if (currentProduct) {
-                    await this.productRepository.updateStock(item.productId, currentProduct.stock + item.quantity);
+                    await this.updateProduct(item.productId, currentProduct);
                 }
             }
         }
@@ -124,7 +144,7 @@ export class OrderService {
     /**
      * Obtiene todas las órdenes pendientes.
      */
-    async getPendingOrders(): Promise<OrderModel[]> {
+    async getPendingOrders() {
         return this.orderRepository.findPendingOrders();
     }
 
