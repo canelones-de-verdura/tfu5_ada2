@@ -1,4 +1,5 @@
 {
+  "name" : "shared-redis",
   "dependencies": {
     "redis": "^5.9.0"
   }
