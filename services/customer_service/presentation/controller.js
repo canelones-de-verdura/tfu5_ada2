@@ -60,3 +60,55 @@ export async function deleteCustomer(req, res) {
         res.status(500).json({ message: "Error al eliminar el cliente", error: error.message });
     }
 }
+
+// solo porque lo pide la letra
+export async function createCustomerSOAP(req, res) {
+    try {
+        const xml = req.body;
+
+        const name = extract(xml, 'name');
+        const email = extract(xml, 'email');
+
+        const payload = { name, email };
+
+        const newCustomer = await service.createCustomer(payload);
+
+        const responseXML = `
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                    <CreateCustomerResponse>
+                        <id>${newCustomer.id}</id>
+                        <name>${newCustomer.name}</name>
+                        <email>${newCustomer.email}</email>
+                        <createdAt>${newCustomer.createdAt}</createdAt>
+                    </CreateCustomerResponse>
+                </soap:Body>
+            </soap:Envelope>
+        `;
+
+        res.set('Content-Type', 'text/xml');
+        res.status(200).send(responseXML);
+
+    } catch (error) {
+        const faultXML = `
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                    <soap:Fault>
+                        <faultcode>soap:Server</faultcode>
+                        <faultstring>Error al crear el cliente: ${error.message}</faultstring>
+                    </soap:Fault>
+                </soap:Body>
+            </soap:Envelope>
+        `;
+
+        res.set('Content-Type', 'text/xml');
+        res.status(500).send(faultXML);
+    }
+}
+
+function extract(xml, tag) {
+    const regex = new RegExp(`<${tag}>(.*?)</${tag}>`); // magia negra
+    const m = xml.match(regex);
+    return m ? m[1] : null;
+}
+
