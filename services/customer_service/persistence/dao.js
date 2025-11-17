@@ -2,7 +2,9 @@ import { CustomerModel } from "./model.js";
 import DatabaseConnection from "shared-db"
 
 export class CustomerDAO {
-    dbConnection = DatabaseConnection.getInstance();
+    get dbConnection() {
+        return DatabaseConnection.getInstance();
+    }
 
     async create(customer) {
         try {

@@ -2,17 +2,16 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Copy shared dependencies first
-COPY services/shared/config_client ./shared/config_client
-COPY services/shared/db ./shared/db
-COPY services/shared/redis ./shared/redis
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+
+# Copy shared modules to the correct relative path for npm install
+COPY services/shared ../shared
 
 # Install shared dependencies
-RUN cd shared/config_client && npm ci --omit=dev && \
+RUN cd ../shared/config_client && npm ci --omit=dev && \
     cd ../db && npm ci --omit=dev && \
     cd ../redis && npm ci --omit=dev
 
-# Copy customer service
 COPY services/customer_service/package*.json ./
 
 RUN npm ci --omit=dev

@@ -1,6 +1,8 @@
 {
-  "name" : "shared-redis",
+  "name": "shared-redis",
+  "main": "redis.js",
+  "type": "module",
   "dependencies": {
-    "redis": "^5.9.0"
+    "redis": "^4.6.13"
   }
 }

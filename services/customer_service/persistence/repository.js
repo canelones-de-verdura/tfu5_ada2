@@ -1,7 +1,7 @@
 import { RedisCache } from "shared-redis"
 
-import { CustomerDAO } from './dao';
-import { CustomerModel } from './model';
+import { CustomerDAO } from './dao.js';
+import { CustomerModel } from './model.js';
 
 export class CustomerRepository {
     constructor() {
