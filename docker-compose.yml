@@ -29,12 +29,17 @@ services:
       DB_ORDERS_CONNECTION_LIMIT: 10
       DB_ORDERS_CONNECT_TIMEOUT: 60000
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: super-secret-key-change-in-production
+      JWT_SECRET: super-secret-key-de-iara
       JWT_EXPIRES_IN: 24h
       GATEWAY_PORT: 8080
-      BACKEND_SERVICE_1: http://customer-service-1:3000
-      BACKEND_SERVICE_2: http://customer-service-2:3000
-      BACKEND_SERVICE_3: http://customer-service-3:3000
+      BACKEND_CUSTOMER_SERVICE_1: http://customer-service-1:3000
+      BACKEND_CUSTOMER_SERVICE_2: http://customer-service-2:3000
+      BACKEND_CUSTOMER_SERVICE_3: http://customer-service-3:3000
+      BACKEND_PRODUCT_SERVICE_1: http://product-service-1:3001
+      BACKEND_PRODUCT_SERVICE_2: http://product-service-2:3001
+      BACKEND_PRODUCT_SERVICE_3: http://product-service-3:3001
+      APP_PORT: 3000
+      NODE_ENV: production
     networks:
       - app-network
     restart: unless-stopped
@@ -135,12 +140,6 @@ services:
       NODE_ENV: production
       CONFIG_SERVICE_URL: http://config-service:4000
       CONFIG_CACHE_TIMEOUT: 300000
-      BACKEND_SERVICE_1: http://customer-service-1:3000
-      BACKEND_SERVICE_2: http://customer-service-2:3000
-      BACKEND_SERVICE_3: http://customer-service-3:3000
-      BACKEND_PRODUCT_SERVICE_1: http://product-service-1:3001
-      BACKEND_PRODUCT_SERVICE_2: http://product-service-2:3001
-      BACKEND_PRODUCT_SERVICE_3: http://product-service-3:3001
     depends_on:
       config-service:
         condition: service_healthy

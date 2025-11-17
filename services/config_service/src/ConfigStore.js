@@ -4,48 +4,51 @@ export class ConfigStore {
     constructor() {
         this.config = {
             database_customers: {
-                host: process.env.DB_CUSTOMERS_HOST || 'mysql-customers',
-                user: process.env.DB_CUSTOMERS_USER || 'appuser',
-                password: process.env.DB_CUSTOMERS_PASSWORD || 'apppassword',
-                name: process.env.DB_CUSTOMERS_NAME || 'customer_db',
-                port: parseInt(process.env.DB_CUSTOMERS_PORT || '3306', 10),
-                connectionLimit: parseInt(process.env.DB_CUSTOMERS_CONNECTION_LIMIT || '10', 10),
-                connectTimeout: parseInt(process.env.DB_CUSTOMERS_CONNECT_TIMEOUT || '60000', 10)
+                host: process.env.DB_CUSTOMERS_HOST,
+                user: process.env.DB_CUSTOMERS_USER,
+                password: process.env.DB_CUSTOMERS_PASSWORD,
+                name: process.env.DB_CUSTOMERS_NAME,
+                port: parseInt(process.env.DB_CUSTOMERS_PORT, 10),
+                connectionLimit: parseInt(process.env.DB_CUSTOMERS_CONNECTION_LIMIT, 10),
+                connectTimeout: parseInt(process.env.DB_CUSTOMERS_CONNECT_TIMEOUT, 10)
             },
             database_products: {
-                host: process.env.DB_PRODUCTS_HOST || 'mysql-products',
-                user: process.env.DB_PRODUCTS_USER || 'appuser',
-                password: process.env.DB_PRODUCTS_PASSWORD || 'apppassword',
-                name: process.env.DB_PRODUCTS_NAME || 'product_db',
-                port: parseInt(process.env.DB_PRODUCTS_PORT || '3306', 10),
-                connectionLimit: parseInt(process.env.DB_PRODUCTS_CONNECTION_LIMIT || '10', 10),
-                connectTimeout: parseInt(process.env.DB_PRODUCTS_CONNECT_TIMEOUT || '60000', 10)
+                host: process.env.DB_PRODUCTS_HOST,
+                user: process.env.DB_PRODUCTS_USER,
+                password: process.env.DB_PRODUCTS_PASSWORD,
+                name: process.env.DB_PRODUCTS_NAME,
+                port: parseInt(process.env.DB_PRODUCTS_PORT, 10),
+                connectionLimit: parseInt(process.env.DB_PRODUCTS_CONNECTION_LIMIT, 10),
+                connectTimeout: parseInt(process.env.DB_PRODUCTS_CONNECT_TIMEOUT, 10)
             },
             database_orders: {
-                host: process.env.DB_ORDERS_HOST || 'mysql-orders',
-                user: process.env.DB_ORDERS_USER || 'appuser',
-                password: process.env.DB_ORDERS_PASSWORD || 'apppassword',
-                name: process.env.DB_ORDERS_NAME || 'order_db',
-                port: parseInt(process.env.DB_ORDERS_PORT || '3306', 10),
-                connectionLimit: parseInt(process.env.DB_ORDERS_CONNECTION_LIMIT || '10', 10),
-                connectTimeout: parseInt(process.env.DB_ORDERS_CONNECT_TIMEOUT || '60000', 10)
+                host: process.env.DB_ORDERS_HOST,
+                user: process.env.DB_ORDERS_USER,
+                password: process.env.DB_ORDERS_PASSWORD,
+                name: process.env.DB_ORDERS_NAME,
+                port: parseInt(process.env.DB_ORDERS_PORT, 10),
+                connectionLimit: parseInt(process.env.DB_ORDERS_CONNECTION_LIMIT, 10),
+                connectTimeout: parseInt(process.env.DB_ORDERS_CONNECT_TIMEOUT, 10)
             },
             redis: {
-                url: process.env.REDIS_URL || 'redis://redis:6379'
+                url: process.env.REDIS_URL
             },
             gateway: {
-                port: parseInt(process.env.GATEWAY_PORT || '8080', 10),
-                backendService1: process.env.BACKEND_SERVICE_1 || 'http://customer-service-1:3000',
-                backendService2: process.env.BACKEND_SERVICE_2 || 'http://customer-service-2:3000',
-                backendService3: process.env.BACKEND_SERVICE_3 || 'http://customer-service-3:3000'
+                port: parseInt(process.env.GATEWAY_PORT, 10),
+                backendCustomerService1: process.env.BACKEND_CUSTOMER_SERVICE_1,
+                backendCustomerService2: process.env.BACKEND_CUSTOMER_SERVICE_2,
+                backendCustomerService3: process.env.BACKEND_CUSTOMER_SERVICE_3,
+                backendProductService1: process.env.BACKEND_PRODUCT_SERVICE_1,
+                backendProductService2: process.env.BACKEND_PRODUCT_SERVICE_2,
+                backendProductService3: process.env.BACKEND_PRODUCT_SERVICE_3
             },
             app: {
-                port: parseInt(process.env.APP_PORT || '3000', 10),
-                nodeEnv: process.env.NODE_ENV || 'production'
+                port: parseInt(process.env.APP_PORT, 10),
+                nodeEnv: process.env.NODE_ENV
             },
             jwt: {
-                secret: process.env.JWT_SECRET || 'super-secret-de-iara',
-                expiresIn: process.env.JWT_EXPIRES_IN || '24h'
+                secret: process.env.JWT_SECRET,
+                expiresIn: process.env.JWT_EXPIRES_IN
             }
         };
     }

@@ -3,50 +3,31 @@ import { ConfigClient } from 'shared-config-client';
 import { Gateway } from './src/Gateway.js';
 
 const app = express();
-let port = Number(process.env.PORT ?? 8080);
-let customerServices = [
-    process.env.BACKEND_SERVICE_1 || 'http://customer-service-1:3000',
-    process.env.BACKEND_SERVICE_2 || 'http://customer-service-2:3000',
-    process.env.BACKEND_SERVICE_3 || 'http://customer-service-3:3000'
-];
-
-let productServices = [
-    process.env.BACKEND_PRODUCT_SERVICE_1 || 'http://product-service-1:3001',
-    process.env.BACKEND_PRODUCT_SERVICE_2 || 'http://product-service-2:3001',
-    process.env.BACKEND_PRODUCT_SERVICE_3 || 'http://product-service-3:3001'
-];
+let port;
+let customerServices;
+let productServices;
 
 async function loadGatewayConfig() {
-    try {
-        const configClient = ConfigClient.getInstance();
-        const gatewayConfig = await configClient.getServiceConfig('gateway');
-        
-        if (gatewayConfig) {
-            console.log('Successfully loaded gateway config from config service');
-            
-            if (gatewayConfig.port) {
-                port = gatewayConfig.port;
-            }
-            
-            if (gatewayConfig.backendService1 && gatewayConfig.backendService2 && gatewayConfig.backendService3) {
-                customerServices = [
-                    gatewayConfig.backendService1,
-                    gatewayConfig.backendService2,
-                    gatewayConfig.backendService3
-                ];
-            }
-
-            if (gatewayConfig.backendProductService1 && gatewayConfig.backendProductService2 && gatewayConfig.backendProductService3) {
-                productServices = [
-                    gatewayConfig.backendProductService1,
-                    gatewayConfig.backendProductService2,
-                    gatewayConfig.backendProductService3
-                ];
-            }
-        }
-    } catch (error) {
-        console.warn('Failed to load gateway config from config service, using defaults:', error.message);
+    const configClient = ConfigClient.getInstance();
+    const gatewayConfig = await configClient.getServiceConfig('gateway');
+    
+    if (!gatewayConfig) {
+        throw new Error('Failed to load gateway config from config service');
     }
+    
+    console.log('Successfully loaded gateway config from config service');
+    
+    port = gatewayConfig.port;
+    customerServices = [
+        gatewayConfig.backendCustomerService1,
+        gatewayConfig.backendCustomerService2,
+        gatewayConfig.backendCustomerService3
+    ];
+    productServices = [
+        gatewayConfig.backendProductService1,
+        gatewayConfig.backendProductService2,
+        gatewayConfig.backendProductService3
+    ];
 }
 
 await loadGatewayConfig();
@@ -106,7 +87,6 @@ app.get('/health', async (req, res) => {
     }
 });
 
-// Proxy routes
 app.use('/api/customers', customerGateway.createProxyConFallback('/api/customers', 'customers'));
 app.use('/api/products', productGateway.createProxyConFallback('/api/products', 'products'));
 
