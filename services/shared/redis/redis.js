@@ -20,7 +20,7 @@ export class RedisCache {
 
     static getInstance() {
         if (!RedisCache.instance) {
-            throw "Class hasn't been initialized yet."
+            throw "Redis - Class hasn't been initialized yet."
         }
         return RedisCache.instance;
     }

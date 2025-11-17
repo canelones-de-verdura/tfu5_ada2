@@ -25,7 +25,7 @@ async function startServer() {
     app.get('/health', (req, res) => {
         res.json({ 
             status: 'healthy',
-            service: 'customer-service',
+            service: 'order-service',
             timestamp: new Date().toISOString(),
             container: process.env.HOSTNAME || process.env.INSTANCE_ID
         });

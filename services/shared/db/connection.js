@@ -22,7 +22,7 @@ export class DatabaseConnection {
 
     static getInstance() {
         if (!DatabaseConnection.instance) {
-            throw "Class hasn't been initialized yet."
+            throw "DB - Class hasn't been initialized yet."
         }
 
         return DatabaseConnection.instance;

@@ -157,7 +157,7 @@ export class OrderItemDAO {
             if (!rows || rows.length === 0) return null;
             const row = rows[0];
 
-            return OrderItemModel.fromJSON({
+            return new OrderItemModel({
                 ...row,
                 orderId: row.order_id,
                 productId: row.product_id,
@@ -173,7 +173,7 @@ export class OrderItemDAO {
         try {
             const rows = await this.dbConnection.query(`SELECT * FROM order_items ORDER BY id`);
             return rows.map((row) =>
-                OrderItemModel.fromJSON({
+                new OrderItemModel({
                     ...row,
                     orderId: row.order_id,
                     productId: row.product_id,
@@ -226,7 +226,7 @@ export class OrderItemDAO {
             );
 
             return rows.map((row) =>
-                OrderItemModel.fromJSON({
+                new OrderItemModel({
                     ...row,
                     orderId: row.order_id,
                     productId: row.product_id,
@@ -247,7 +247,7 @@ export class OrderItemDAO {
             );
 
             return rows.map((row) =>
-                OrderItemModel.fromJSON({
+                new OrderItemModel({
                     ...row,
                     orderId: row.order_id,
                     productId: row.product_id,
