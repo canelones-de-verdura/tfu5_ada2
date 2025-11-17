@@ -7,13 +7,27 @@ services:
       - "4000:4000"
     environment:
       PORT: 4000
-      DB_HOST: mysql
-      DB_USER: appuser
-      DB_PASSWORD: apppassword
-      DB_NAME: customer_db
-      DB_PORT: 3306
-      DB_CONNECTION_LIMIT: 10
-      DB_CONNECT_TIMEOUT: 60000
+      DB_CUSTOMERS_HOST: mysql-customers
+      DB_CUSTOMERS_USER: appuser
+      DB_CUSTOMERS_PASSWORD: apppassword
+      DB_CUSTOMERS_NAME: customer_db
+      DB_CUSTOMERS_PORT: 3306
+      DB_CUSTOMERS_CONNECTION_LIMIT: 10
+      DB_CUSTOMERS_CONNECT_TIMEOUT: 60000
+      DB_PRODUCTS_HOST: mysql-products
+      DB_PRODUCTS_USER: appuser
+      DB_PRODUCTS_PASSWORD: apppassword
+      DB_PRODUCTS_NAME: product_db
+      DB_PRODUCTS_PORT: 3306
+      DB_PRODUCTS_CONNECTION_LIMIT: 10
+      DB_PRODUCTS_CONNECT_TIMEOUT: 60000
+      DB_ORDERS_HOST: mysql-orders
+      DB_ORDERS_USER: appuser
+      DB_ORDERS_PASSWORD: apppassword
+      DB_ORDERS_NAME: order_db
+      DB_ORDERS_PORT: 3306
+      DB_ORDERS_CONNECTION_LIMIT: 10
+      DB_ORDERS_CONNECT_TIMEOUT: 60000
       REDIS_URL: redis://redis:6379
       JWT_SECRET: super-secret-key-change-in-production
       JWT_EXPIRES_IN: 24h
@@ -44,7 +58,7 @@ services:
       timeout: 5s
       retries: 3
 
-  mysql:
+  mysql-customers:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -54,8 +68,52 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_customers_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mysql-products:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: product_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_products_data:/var/lib/mysql
+      - ./database/init-products.sql:/docker-entrypoint-initdb.d/init-products.sql:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mysql-orders:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: order_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_orders_data:/var/lib/mysql
+      - ./database/init-orders.sql:/docker-entrypoint-initdb.d/init-orders.sql:ro
     networks:
       - app-network
     restart: unless-stopped
@@ -110,7 +168,7 @@ services:
       CONFIG_CACHE_TIMEOUT: 300000
       INSTANCE_ID: customer-service-1
     depends_on:
-      mysql:
+      mysql-customers:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -120,7 +178,7 @@ services:
       - app-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -137,7 +195,7 @@ services:
       CONFIG_CACHE_TIMEOUT: 300000
       INSTANCE_ID: customer-service-2
     depends_on:
-      mysql:
+      mysql-customers:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -147,7 +205,7 @@ services:
       - app-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -164,7 +222,7 @@ services:
       CONFIG_CACHE_TIMEOUT: 300000
       INSTANCE_ID: customer-service-3
     depends_on:
-      mysql:
+      mysql-customers:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -174,7 +232,7 @@ services:
       - app-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -192,7 +250,7 @@ services:
       CONFIG_SERVICE_URL: http://config-service:4000
       CONFIG_CACHE_TIMEOUT: 300000
     depends_on:
-      mysql:
+      mysql-customers:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -202,7 +260,7 @@ services:
       - app-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -213,5 +271,9 @@ networks:
     driver: bridge
 
 volumes:
-  mysql_data:
+  mysql_customers_data:
+    driver: local
+  mysql_products_data:
+    driver: local
+  mysql_orders_data:
     driver: local

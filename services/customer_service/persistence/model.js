@@ -6,4 +6,8 @@ export class CustomerModel {
         this.phone = data.phone || null;
         this.address = data.address || '';
     }
+
+    static fromJSON(json) {
+        return new CustomerModel(json);
+    }
 }

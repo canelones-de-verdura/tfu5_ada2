@@ -45,7 +45,7 @@ export class HealthMonitor {
         for (const serviceUrl of this.backendServices) {
             try {
                 const startTime = Date.now();
-                const response = await this.httpClient.get(`${serviceUrl}/api`);
+                const response = await this.httpClient.get(`${serviceUrl}/health`);
                 const responseTime = Date.now() - startTime;
 
                 checks[serviceUrl] = {

@@ -114,3 +114,5 @@ export class DatabaseConnection {
         return { ...this.config };
     }
 }
+
+export default DatabaseConnection;

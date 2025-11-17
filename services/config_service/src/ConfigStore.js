@@ -3,14 +3,32 @@ export class ConfigStore {
 
     constructor() {
         this.config = {
-            database: {
-                host: process.env.DB_HOST || 'mysql',
-                user: process.env.DB_USER || 'appuser',
-                password: process.env.DB_PASSWORD || 'apppassword',
-                name: process.env.DB_NAME || 'ecommerce_db',
-                port: parseInt(process.env.DB_PORT || '3306', 10),
-                connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || '10', 10),
-                connectTimeout: parseInt(process.env.DB_CONNECT_TIMEOUT || '60000', 10)
+            database_customers: {
+                host: process.env.DB_CUSTOMERS_HOST || 'mysql-customers',
+                user: process.env.DB_CUSTOMERS_USER || 'appuser',
+                password: process.env.DB_CUSTOMERS_PASSWORD || 'apppassword',
+                name: process.env.DB_CUSTOMERS_NAME || 'customer_db',
+                port: parseInt(process.env.DB_CUSTOMERS_PORT || '3306', 10),
+                connectionLimit: parseInt(process.env.DB_CUSTOMERS_CONNECTION_LIMIT || '10', 10),
+                connectTimeout: parseInt(process.env.DB_CUSTOMERS_CONNECT_TIMEOUT || '60000', 10)
+            },
+            database_products: {
+                host: process.env.DB_PRODUCTS_HOST || 'mysql-products',
+                user: process.env.DB_PRODUCTS_USER || 'appuser',
+                password: process.env.DB_PRODUCTS_PASSWORD || 'apppassword',
+                name: process.env.DB_PRODUCTS_NAME || 'product_db',
+                port: parseInt(process.env.DB_PRODUCTS_PORT || '3306', 10),
+                connectionLimit: parseInt(process.env.DB_PRODUCTS_CONNECTION_LIMIT || '10', 10),
+                connectTimeout: parseInt(process.env.DB_PRODUCTS_CONNECT_TIMEOUT || '60000', 10)
+            },
+            database_orders: {
+                host: process.env.DB_ORDERS_HOST || 'mysql-orders',
+                user: process.env.DB_ORDERS_USER || 'appuser',
+                password: process.env.DB_ORDERS_PASSWORD || 'apppassword',
+                name: process.env.DB_ORDERS_NAME || 'order_db',
+                port: parseInt(process.env.DB_ORDERS_PORT || '3306', 10),
+                connectionLimit: parseInt(process.env.DB_ORDERS_CONNECTION_LIMIT || '10', 10),
+                connectTimeout: parseInt(process.env.DB_ORDERS_CONNECT_TIMEOUT || '60000', 10)
             },
             redis: {
                 url: process.env.REDIS_URL || 'redis://redis:6379'

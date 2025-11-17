@@ -5,24 +5,41 @@ import { ConfigClient } from "shared-config-client";
 import { DatabaseConnection } from "shared-db";
 import { RedisCache } from "shared-redis"
 
-const config = ConfigClient.getInstance();
+async function startServer() {
+    const config = ConfigClient.getInstance();
 
-const db_config = config.getServiceConfig("database");
-const db = new DatabaseConnection(db_config)
+    const db_config = await config.getServiceConfig("database_customers");
+    const db = new DatabaseConnection(db_config)
 
-const redis_config = config.getServiceConfig("redis");
-const redis = new RedisCache(redis_config)
+    const redis_config = await config.getServiceConfig("redis");
+    const redis = new RedisCache(redis_config)
+    await redis.connect();
 
-const app = express()
-const port = 3000
+    const app = express()
+    const port = 3000
 
-app.disable("x-powered-by");
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+    app.disable("x-powered-by");
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-app.use("/api", router);
+    app.get('/health', (req, res) => {
+        res.json({ 
+            status: 'healthy',
+            service: 'customer-service',
+            timestamp: new Date().toISOString(),
+            container: process.env.HOSTNAME || process.env.INSTANCE_ID
+        });
+    });
 
-app.listen(port, () => {
-    console.log(`Service listening on port ${port}`)
-})
+    app.use("/api/customers", router);
+
+    app.listen(port, () => {
+        console.log(`Service listening on port ${port}`)
+    })
+}
+
+startServer().catch(err => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+});
 

@@ -1,5 +1,5 @@
-import { CustomerRepository } from '../../persistence/repository.js';
-import { CustomerModel } from '../../persistence/model.js';
+import { CustomerRepository } from '../persistence/repository.js';
+import { CustomerModel } from '../persistence/model.js';
 
 export class CustomerService {
     constructor() {
