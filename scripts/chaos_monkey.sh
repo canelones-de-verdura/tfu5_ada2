@@ -1,13 +1,13 @@
 #!/bin/bash
 
-MIN_INTERVAL=${1:-10}
-MAX_INTERVAL=${2:-30}
+MIN_INTERVAL=${1:-5}
+MAX_INTERVAL=${2:-10}
 FOLDER_NAME="tfu5_ada2"
 
 echo "El mono loco está suelto"
 echo "Intervalo: ${MIN_INTERVAL}s - ${MAX_INTERVAL}s"
 
-SERVICES=("customer-service" "product-service", "order-service")
+SERVICES=("customer-service" "product-service" "order-service")
 
 get_running_containers() {
     local service=$1
